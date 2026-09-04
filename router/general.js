@@ -58,15 +58,21 @@ public_users.get('/axios/author/:author', async (req, res) => {
   });
 
 // Get all books based on title
-public_users.get('/title/:title',function (req, res) {
-    const title = req.params.title;
+public_users.get('/axios/title/:title', async (req, res) => {
+    try {
+      const title = req.params.title;
   
-    const bookList = Object.values(books).filter(
-      (book) => book.title === title
-    );
+      const response = await axios.get(
+        `http://localhost:5000/title/${encodeURIComponent(title)}`
+      );
   
-    return res.status(200).json(bookList);
-});
+      return res.status(200).json(response.data);
+    } catch (error) {
+      return res.status(404).json({
+        message: "Title not found"
+      });
+    }
+  });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
